@@ -6,15 +6,17 @@ public class User {
     private String username;
     private String password;
     private String role;
+    private String subject; // only set when role = TEACHER
 
     public User() {
     }
 
-    public User(int userId, String username, String password, String role) {
+    public User(int userId, String username, String password, String role, String subject) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.subject = subject;
     }
 
     public int getUserId() {
@@ -47,5 +49,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }

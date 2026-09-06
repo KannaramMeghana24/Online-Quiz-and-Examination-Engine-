@@ -34,6 +34,7 @@ public class UserDAO {
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setRole(rs.getString("role"));
+                user.setSubject(rs.getString("subject"));
 
             }
 

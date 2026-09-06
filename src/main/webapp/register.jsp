@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Online Quiz Registration</title>
+<title>Student Registration</title>
 <style>
 body{
     font-family:Arial;
@@ -18,7 +18,7 @@ body{
     border-radius:10px;
     box-shadow:0 0 10px gray;
 }
-input, select{
+input{
     width:100%;
     padding:10px;
     margin:10px 0;
@@ -38,31 +38,21 @@ button:hover{
 h2{
     text-align:center;
 }
-#subjectField{
-    display:none;
-}
 </style>
 </head>
 <body>
 
 <div class="container">
-<h2>Create Account</h2>
+<h2>Student Registration</h2>
 
 <form action="RegisterServlet" method="post">
+
+    <!-- Only students self-register; teacher accounts are created by an admin -->
+    <input type="hidden" name="role" value="STUDENT">
 
     <input type="text" name="username" placeholder="Choose a Username" required>
 
     <input type="password" name="password" placeholder="Choose a Password" required>
-
-    <select name="role" id="role" onchange="toggleSubject()" required>
-        <option value="">-- Select Role --</option>
-        <option value="STUDENT">Student</option>
-        <option value="TEACHER">Teacher</option>
-    </select>
-
-    <div id="subjectField">
-        <input type="text" name="subject" placeholder="Subject you teach (e.g. Mathematics)">
-    </div>
 
     <button type="submit">Register</button>
 
@@ -71,14 +61,6 @@ h2{
 <p style="text-align:center;">Already have an account? <a href="login.jsp">Login</a></p>
 
 </div>
-
-<script>
-function toggleSubject() {
-    var role = document.getElementById("role").value;
-    var subjectField = document.getElementById("subjectField");
-    subjectField.style.display = (role === "TEACHER") ? "block" : "none";
-}
-</script>
 
 </body>
 </html>

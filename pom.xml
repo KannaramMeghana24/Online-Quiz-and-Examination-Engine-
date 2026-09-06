@@ -5,6 +5,29 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Online Quiz Engine</name>
+
+  <dependencies>
+
+    <!-- Servlet/JSP API - matches Tomcat 9 (javax.* namespace, not jakarta.*).
+         Marked "provided" because Tomcat supplies this at runtime; it's
+         only needed here so the code compiles in Eclipse/Maven. -->
+    <dependency>
+    	<groupId>jakarta.servlet</groupId>
+    	<artifactId>jakarta.servlet-api</artifactId>
+    	<version>6.0.0</version>
+    	<scope>provided</scope>
+	</dependency>
+
+    <!-- Oracle JDBC driver - replaces manually placing ojdbc11.jar in
+         WEB-INF/lib. Maven downloads it and bundles it into the WAR. -->
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc11</artifactId>
+      <version>23.8.0.25.04</version>
+    </dependency>
+
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>

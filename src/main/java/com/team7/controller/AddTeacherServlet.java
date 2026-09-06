@@ -7,44 +7,47 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import com.team7.dao.UserDAO;
+import com.team7.model.User;
 
-@WebServlet("/RegisterServlet")
-public class RegisterServlet extends HttpServlet {
+@WebServlet("/AddTeacherServlet")
+public class AddTeacherServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        HttpSession session = request.getSession();
+        User admin = (User) session.getAttribute("user");
+
+        // Only a logged-in admin may create teacher accounts
+        if (admin == null || !admin.getRole().equalsIgnoreCase("ADMIN")) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String role = request.getParameter("role");       // "STUDENT" or "TEACHER"
-        String subject = request.getParameter("subject");  // only used when role=TEACHER
+        String subject = request.getParameter("subject");
 
-        // Basic validation
         if (username == null || username.isBlank()
                 || password == null || password.isBlank()
-                || role == null || role.isBlank()) {
+                || subject == null || subject.isBlank()) {
 
             response.getWriter().println("<h2>All fields are required. Please go back and try again.</h2>");
             return;
         }
 
-        if (!role.equalsIgnoreCase("STUDENT") && !role.equalsIgnoreCase("TEACHER")) {
-            response.getWriter().println("<h2>Invalid role selected.</h2>");
-            return;
-        }
-
         UserDAO dao = new UserDAO();
-
-        boolean success = dao.register(username, password, role.toUpperCase(), subject);
+        boolean success = dao.register(username, password, "TEACHER", subject);
 
         if (success) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("admin/addTeacher.jsp?added=true");
         } else {
-            response.getWriter().println("<h2>Registration failed. Username may already be taken.</h2>");
+            response.getWriter().println("<h2>Failed - username may already be taken.</h2>");
         }
     }
 }
