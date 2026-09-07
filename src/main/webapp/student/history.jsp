@@ -28,7 +28,7 @@ body{
     padding:30px;
 }
 .container{
-    max-width:600px;
+    max-width:650px;
     margin:0 auto;
     background:white;
     padding:25px;
@@ -52,7 +52,15 @@ th{
 tr:nth-child(even){
     background:#f9f9f9;
 }
-a{
+a.review-link{
+    color:#007bff;
+    font-weight:bold;
+    text-decoration:none;
+}
+a.review-link:hover{
+    text-decoration:underline;
+}
+a.back{
     display:block;
     margin-top:15px;
 }
@@ -76,6 +84,7 @@ a{
                 <th>Score</th>
                 <th>Total</th>
                 <th>Date</th>
+                <th></th>
             </tr>
 
             <% for (QuizResult r : results) { %>
@@ -84,6 +93,7 @@ a{
                     <td><%= r.getScore() %></td>
                     <td><%= r.getTotalQuestions() %></td>
                     <td><%= r.getCompletedAt() %></td>
+                    <td><a class="review-link" href="review.jsp?resultId=<%= r.getResultId() %>">Review</a></td>
                 </tr>
             <% } %>
 
@@ -91,7 +101,7 @@ a{
 
     <% } %>
 
-    <a href="home.jsp">Back to Home</a>
+    <a class="back" href="home.jsp">Back to Home</a>
 
 </div>
 

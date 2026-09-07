@@ -30,40 +30,67 @@ public class AddQuestionServlet extends HttpServlet {
             return;
         }
 
-        String questionText = request.getParameter("questionText");
-        String optionA = request.getParameter("optionA");
-        String optionB = request.getParameter("optionB");
-        String optionC = request.getParameter("optionC");
-        String optionD = request.getParameter("optionD");
-        String correctOption = request.getParameter("correctOption");
-
-        if (questionText == null || questionText.isBlank()
-                || optionA == null || optionA.isBlank()
-                || optionB == null || optionB.isBlank()
-                || optionC == null || optionC.isBlank()
-                || optionD == null || optionD.isBlank()
-                || correctOption == null || correctOption.isBlank()) {
-
-            response.getWriter().println("<h2>All fields are required. Please go back and try again.</h2>");
-            return;
+        int total;
+        try {
+            total = Integer.parseInt(request.getParameter("totalQuestions"));
+        } catch (NumberFormatException e) {
+            total = 15; // fallback matching the JSP's fixed batch size
         }
 
-        Question q = new Question();
-        q.setSubject(user.getSubject());
-        q.setQuestionText(questionText);
-        q.setOptionA(optionA);
-        q.setOptionB(optionB);
-        q.setOptionC(optionC);
-        q.setOptionD(optionD);
-        q.setCorrectOption(correctOption.toUpperCase());
+        Question[] batch = new Question[total];
 
+        // First pass: validate every question in the batch is fully filled
+        // before writing anything to the DB, so a partial batch never gets
+        // saved (the JSP's disabled-submit already prevents this client-side,
+        // this is the server-side backstop).
+        for (int i = 1; i <= total; i++) {
+
+            String questionText = request.getParameter("questionText_" + i);
+            String optionA = request.getParameter("optionA_" + i);
+            String optionB = request.getParameter("optionB_" + i);
+            String optionC = request.getParameter("optionC_" + i);
+            String optionD = request.getParameter("optionD_" + i);
+            String correctOption = request.getParameter("correctOption_" + i);
+
+            if (isBlank(questionText) || isBlank(optionA) || isBlank(optionB)
+                    || isBlank(optionC) || isBlank(optionD) || isBlank(correctOption)) {
+
+                response.getWriter().println(
+                    "<h2>Question " + i + " is incomplete. Please go back and fill in every question.</h2>");
+                return;
+            }
+
+            Question q = new Question();
+            q.setSubject(user.getSubject());
+            q.setQuestionText(questionText);
+            q.setOptionA(optionA);
+            q.setOptionB(optionB);
+            q.setOptionC(optionC);
+            q.setOptionD(optionD);
+            q.setCorrectOption(correctOption.toUpperCase());
+
+            batch[i - 1] = q;
+        }
+
+        // Second pass: everything validated, now actually insert
         QuestionDAO dao = new QuestionDAO();
-        boolean success = dao.addQuestion(q);
+        int savedCount = 0;
 
-        if (success) {
+        for (Question q : batch) {
+            if (dao.addQuestion(q)) {
+                savedCount++;
+            }
+        }
+
+        if (savedCount == total) {
             response.sendRedirect("teacher/addQuestion.jsp?added=true");
         } else {
-            response.getWriter().println("<h2>Failed to add question.</h2>");
+            response.getWriter().println(
+                "<h2>Only " + savedCount + " of " + total + " questions were saved. Please check and retry the rest.</h2>");
         }
+    }
+
+    private boolean isBlank(String s) {
+        return s == null || s.isBlank();
     }
 }

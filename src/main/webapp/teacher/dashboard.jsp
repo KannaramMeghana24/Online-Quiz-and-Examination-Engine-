@@ -68,6 +68,8 @@ a.logout{
     <h2>Welcome, <%= user.getUsername() %></h2>
     <p>Subject: <b><%= subject %></b></p>
 
+    <a href="addQuestion.jsp" style="display:inline-block;padding:10px 15px;background:#28a745;color:white;text-decoration:none;border-radius:5px;margin-bottom:15px;">Add Question</a>
+
     <h3>Student Results</h3>
 
     <% if (results.isEmpty()) { %>

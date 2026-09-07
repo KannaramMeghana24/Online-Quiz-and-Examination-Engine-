@@ -65,7 +65,17 @@ public class SubmitQuizServlet extends HttpServlet {
         }
 
         ResultDAO resultDAO = new ResultDAO();
-        resultDAO.saveResult(user.getUserId(), quizSession.getSubject(), score, total);
+
+        // Save the summary row first (with the real, already-computed score)
+        // so we get back a result_id to attach each individual answer to.
+        int resultId = resultDAO.saveResult(user.getUserId(), quizSession.getSubject(), score, total);
+
+        if (resultId != -1) {
+            for (Question q : quizSession.getQuestions()) {
+                String submitted = request.getParameter("q_" + q.getQuestionId());
+                resultDAO.saveAnswer(resultId, q.getQuestionId(), submitted);
+            }
+        }
 
         // Quiz attempt is over - clear it so refreshing/back-button can't resubmit
         session.removeAttribute("quizSession");
