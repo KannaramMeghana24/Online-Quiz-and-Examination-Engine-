@@ -1,9 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-<<<<<<< HEAD
-    pageEncoding="UTF-8" %>
-=======
     pageEncoding="UTF-8"%>
->>>>>>> 592fd293a5394fcb3d919e6d7477f9c830245822
 <%@ page import="com.team7.model.User"%>
 <%@ page import="com.team7.model.QuizSession"%>
 <%@ page import="com.team7.model.Question"%>
@@ -11,17 +7,17 @@
 <%
     User user = (User) session.getAttribute("user");
     QuizSession quizSession = (QuizSession) session.getAttribute("quizSession");
-
+ 
     if (user == null || !user.getRole().equalsIgnoreCase("STUDENT")) {
         response.sendRedirect("../login.jsp");
         return;
     }
-
+ 
     if (quizSession == null) {
         response.sendRedirect("home.jsp");
         return;
     }
-
+ 
     List<Question> questions = quizSession.getQuestions();
     int secondsRemaining = quizSession.getSecondsRemaining();
 %>
@@ -29,7 +25,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Quiz - <%= quizSession.getSubject() %></title>
+<title>Quiz - <%= quizSession.getQuizTitle() %></title>
 <style>
 body{
     font-family:Arial;
@@ -77,41 +73,42 @@ button:hover{
 </style>
 </head>
 <body>
-
+ 
 <div class="container">
-
-    <h2><%= quizSession.getSubject() %> Quiz</h2>
-
+ 
+    <h2><%= quizSession.getQuizTitle() %></h2>
+<p style="text-align:center;color:#666;margin-top:-10px;"><%= quizSession.getSubject() %></p>
+ 
     <div id="timer">Time Left: <span id="timeDisplay"></span></div>
-
+ 
     <form id="quizForm" action="../SubmitQuizServlet" method="post">
-
+ 
         <% int i = 1;
            for (Question q : questions) { %>
-
+ 
             <div class="question">
-                <p><%= i %>. <%= q.getQuestionText() %></p>
-
+<p><%= i %>. <%= q.getQuestionText() %></p>
+ 
                 <label><input type="radio" name="q_<%= q.getQuestionId() %>" value="A" required> <%= q.getOptionA() %></label>
-                <label><input type="radio" name="q_<%= q.getQuestionId() %>" value="B"> <%= q.getOptionB() %></label>
-                <label><input type="radio" name="q_<%= q.getQuestionId() %>" value="C"> <%= q.getOptionC() %></label>
-                <label><input type="radio" name="q_<%= q.getQuestionId() %>" value="D"> <%= q.getOptionD() %></label>
-            </div>
-
-        <% i++; } %>
-
-        <button type="submit">Submit Quiz</button>
-
-    </form>
-
+<label><input type="radio" name="q_<%= q.getQuestionId() %>" value="B"> <%= q.getOptionB() %></label>
+<label><input type="radio" name="q_<%= q.getQuestionId() %>" value="C"> <%= q.getOptionC() %></label>
+<label><input type="radio" name="q_<%= q.getQuestionId() %>" value="D"> <%= q.getOptionD() %></label>
 </div>
-
+ 
+        <% i++; } %>
+ 
+        <button type="submit">Submit Quiz</button>
+ 
+    </form>
+ 
+</div>
+ 
 <script src="../js/timer.js"></script>
 <script>
     // secondsRemaining comes from the server (QuizSession), not a
     // client-guessed value, so a refreshed page still shows correct time.
     startTimer(<%= secondsRemaining %>, "timeDisplay", "quizForm");
 </script>
-
+ 
 </body>
 </html>
