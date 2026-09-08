@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<<<<<<< HEAD
 <%@ page import="com.team7.model.User" %>
+=======
+<%@ page import="com.team7.model.User"%>
+>>>>>>> 592fd293a5394fcb3d919e6d7477f9c830245822
 <%@ page import="com.team7.model.QuizResult"%>
 <%@ page import="com.team7.dao.ResultDAO"%>
 <%@ page import="java.util.List"%>

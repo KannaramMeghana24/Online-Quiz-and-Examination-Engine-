@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
+<<<<<<< HEAD
     pageEncoding="UTF-8" %>
 <%@ page import="com.team7.model.User" %>
+=======
+    pageEncoding="UTF-8"%>
+<%@ page import="com.team7.model.User"%>
+>>>>>>> 592fd293a5394fcb3d919e6d7477f9c830245822
 <%
     User user = (User) session.getAttribute("user");
 
