@@ -49,11 +49,7 @@ a{
 
 <div class="container">
 
-<<<<<<< HEAD
 <h2>Online Quiz and Examination Engine</h2>
-=======
-<h2>Online Quiz & Examination Engine</h2>
->>>>>>> 592fd293a5394fcb3d919e6d7477f9c830245822
 
 <form action="LoginServlet" method="post">
 
